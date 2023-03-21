@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "genshinwikidataparser"
+version = "0.1.0"
+description = "原神 wiki 数据解析库"
+authors = ["Karako <karakohear@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+ujson = "^5.7.0"
+orjson = "^3.8.8"
+aiohttp = {extras = ["speedups"], version = "^3.8.4"}
+pydantic = {extras = ["dotenv", "email"], version = "^1.10.6"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
