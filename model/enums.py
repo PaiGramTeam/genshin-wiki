@@ -10,6 +10,11 @@ class AvatarQuality(StrEnum):
     """特殊"""
 
 
+class ItemType(StrEnum):
+    Virtual = "VIRTUAL"
+    Material = "MATERIAL"
+
+
 class WeaponType(StrEnum):
     Sword = "SWORD"
     """单手剑"""
@@ -86,3 +91,54 @@ class PropType(StrEnum):
     """冰元素伤害加成"""
     Geo = "GeoAddHurt"
     """岩元素伤害加成"""
+
+
+class FoodQuality(StrEnum):
+    STRANGE = "Strange"
+    """奇怪的"""
+    ORDINARY = "Ordinary"
+    """普通的"""
+    DELICIOUS = "Delicious"
+    """美味的"""
+
+
+class MaterialType(StrEnum):
+    Adsorbate = "ADSORBATE"
+    FakeAbsorbate = "FAKE_ABSORBATE"
+    Consume = "CONSUME"
+    Talent = "TALENT"
+    Avatar = "AVATAR"
+    Chest = "CHEST"
+    NoticeAddHp = "NOTICE_ADD_HP"
+    Exchange = "EXCHANGE"
+    Wood = "WOOD"
+    Quest = "QUEST"
+    Cricket = "CRICKET"
+    Widget = "WIDGET"
+    ElemCrystal = "ELEM_CRYSTAL"
+    SpiceFood = "SPICE_FOOD"
+    ActivityGear = "ACTIVITY_GEAR"
+    ActivityRobot = "ACTIVITY_ROBOT"
+    ActivityJigsaw = "ACTIVITY_JIGSAW"
+    Food = "FOOD"
+    ExpFruit = "EXP_FRUIT"
+    WeaponExpStone = "WEAPON_EXP_STONE"
+    AvatarMaterial = "AVATAR_MATERIAL"
+    ReliquaryMaterial = "RELIQUARY_MATERIAL"
+    ConsumeBatchUse = "CONSUME_BATCH_USE"
+    FishBait = "FISH_BAIT"
+    ChestBatchUse = "CHEST_BATCH_USE"
+    SelectableChest = "SELECTABLE_CHEST"
+    HomeSeed = "HOME_SEED"
+    Flycloak = "FLYCLOAK"
+    BGM = "BGM"
+    SeaLamp = "SEA_LAMP"
+    ChannellerSlabBuff = "CHANNELLER_SLAB_BUFF"
+    FishRod = "FISH_ROD"
+    Namecard = "NAMECARD"
+    Aranara = "ARANARA"
+    DeshretManual = "DESHRET_MANUAL"
+    Fireworks = "FIREWORKS"
+    Costume = "COSTUME"
+    FurnitureSuiteFormula = "FURNITURE_SUITE_FORMULA"
+    FurnitureFormula = "FURNITURE_FORMULA"
