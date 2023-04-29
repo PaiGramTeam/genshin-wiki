@@ -6,6 +6,16 @@ from utils.model import BaseModel
 if TYPE_CHECKING:
     from model.item import Item
 
+__all__ = (
+    "Avatar",
+    "AvatarBirth",
+    "AvatarInfo",
+    "AvatarConstellation",
+    "AvatarPromote",
+    "Seuyu",
+    "ItemCount",
+)
+
 
 class AvatarBirth(BaseModel):
     """角色生日"""
@@ -46,7 +56,7 @@ class AvatarInfo(BaseModel):
     """声优"""
 
 
-class AvatarItem(BaseModel):
+class ItemCount(BaseModel):
     item: "Item"
     """物品"""
     count: int
@@ -63,41 +73,8 @@ class AvatarPromote(BaseModel):
 
     coin: int = 0
     """摩拉"""
-    items: list[AvatarItem]
+    items: list[ItemCount] = []
     """突破所需材料"""
-
-
-class AvatarSkill(BaseModel):
-    name: str
-    """技能名称"""
-    description: str
-    """技能描述"""
-    promote_level: int = 0
-    """所需突破等级"""
-    icon: str
-    """图标"""
-
-
-class AvatarActiveSkill(AvatarSkill):
-    """角色主动技能"""
-
-    CD: float
-    """冷却时间"""
-    max_charge_num: int
-    """技能最大储存次数"""
-
-
-class AvatarPassiveSkill(AvatarSkill):
-    """角色被动技能"""
-
-
-class AvatarSkills(BaseModel):
-    attack_skill: AvatarActiveSkill
-    """普通攻击"""
-    energy_skill: AvatarActiveSkill
-    """元素爆发"""
-    proud_skills: list[AvatarSkill]
-    """被动技能"""
 
 
 class AvatarConstellation(BaseModel):

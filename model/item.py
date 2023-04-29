@@ -1,7 +1,7 @@
 from model.enums import ItemType, MaterialType
 
 from model.enums import FoodQuality
-from utils.model import BaseModel
+from model._base import Model as BaseModel
 
 
 class Item(BaseModel):
@@ -9,8 +9,6 @@ class Item(BaseModel):
     """ID"""
     name: str
     """名称"""
-    family: str
-    """种类"""
     type: str | None
     """类型"""
     icon: str
