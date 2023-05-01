@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import ujson as json
 from aiofiles import open as async_open
 
@@ -11,7 +13,9 @@ OUT_DIR = PROJECT_ROOT.joinpath("out")
 
 
 # noinspection PyShadowingBuiltins
-async def parse_item_data(lang: Lang):
+async def parse_item_data(
+    lang: Lang,
+) -> tuple[Path, list[Item | Material | Food | Namecard]]:
     out_path = OUT_DIR.joinpath(f"{lang}")
     out_path.mkdir(exist_ok=True, parents=True)
 
@@ -76,6 +80,7 @@ async def parse_item_data(lang: Lang):
                 [i.dict() for i in item_list],
                 ensure_ascii=False,
                 encode_html_chars=False,
+                indent=4,
             ),
         )
-    breakpoint()
+    return out_path, item_list

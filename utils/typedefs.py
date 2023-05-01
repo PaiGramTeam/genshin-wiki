@@ -8,12 +8,10 @@ Lang = Literal[
     "es",
     "fr",
     "id",
-    "it",
     "jp",
     "kr",
     "pt",
     "ru",
     "th",
-    "tr",
     "vi",
 ]

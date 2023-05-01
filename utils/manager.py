@@ -8,7 +8,6 @@ from pydantic import Json
 from yarl import URL
 
 from utils.const import DATA_DIR
-from utils.single import Singleton
 from utils.typedefs import Lang
 
 __all__ = "ResourceManager"
@@ -16,7 +15,7 @@ __all__ = "ResourceManager"
 ssl_context = ssl.SSLContext()
 
 
-class ResourceManager(Singleton):
+class ResourceManager:
     _lang: Lang
     _base_url: URL
 
@@ -36,9 +35,8 @@ class ResourceManager(Singleton):
 
     @property
     def client(self) -> Client:
-        with self._lock:
-            if self._client is None or self._client.is_closed:
-                self._client = Client(verify=ssl_context)
+        if self._client is None or self._client.is_closed:
+            self._client = Client(verify=ssl_context)
         return self._client
 
     def refresh(self) -> None:
