@@ -7,7 +7,7 @@ from orjson import loads as json_loads
 from orjson import JSONDecodeError as _JSONDecodeError
 from orjson import JSONEncodeError as _JSONEncodeError
 
-__all__ = ("JSONEncodeError", "JSONDecodeError", "json_dumps", "json_loads")
+__all__ = ("JSONEncodeError", "JSONDecodeError", "dumps", "loads")
 
 JSONEncodeError = _JSONEncodeError
 JSONDecodeError = _JSONDecodeError

@@ -1,7 +1,5 @@
-from model.enums import ItemType, MaterialType
-
-from model.enums import FoodQuality
-from model._base import Model as BaseModel
+from model.enums import FoodQuality, ItemType, MaterialType
+from utils.model import BaseModel
 
 
 class Item(BaseModel):
