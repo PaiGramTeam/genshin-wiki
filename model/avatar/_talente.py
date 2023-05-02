@@ -22,11 +22,11 @@ __all__ = (
 
 
 class TalentAttribute(BaseModel):
-    level: int
+    level: int = 1
     """等级"""
-    param_descriptions: list[str]
+    param_descriptions: list[str] = []
     """参数描述"""
-    param_list: list[float]
+    param_list: list[float] = []
     """参数列表"""
 
     break_level: int = 0
@@ -44,11 +44,8 @@ class Talent(BaseModel):
     """天赋描述"""
     icon: str
     """图标"""
-    level: int = 0
+    promote_level: int = 0
     """解锁等级"""
-
-    attributes: list[TalentAttribute]
-    """数值参数列表"""
 
 
 class CombatTalent(Talent):
@@ -56,6 +53,9 @@ class CombatTalent(Talent):
 
     cooldown: float = 0
     """冷却时间"""
+
+    attributes: list[TalentAttribute]
+    """数值参数列表"""
 
 
 class NormalAttack(CombatTalent):
@@ -75,33 +75,36 @@ class AlternateSprint(CombatTalent):
 
 
 class PassiveTalent(Talent):
-    """被动天赋"""
+    """固有天赋"""
+
+    attribute: TalentAttribute
+    """数值参数"""
 
 
 class AscensionPassive(PassiveTalent):
-    """突破被动天赋"""
+    """突破固有天赋"""
 
     ascension: ClassVar[int]
 
 
 class FirstAscensionPassive(AscensionPassive):
-    """第一次突破被动天赋"""
+    """第一次突破固有天赋"""
 
     ascension = 1
 
 
 class FourthAscensionPassive(AscensionPassive):
-    """第四次突破被动天赋"""
+    """第四次突破固有天赋"""
 
     ascension = 4
 
 
 class UtilityPassive(PassiveTalent):
-    """实用被动天赋"""
+    """实用固有天赋"""
 
 
 class MiscellaneousPassive(PassiveTalent):
-    """杂项被动天赋"""
+    """杂项固有天赋"""
 
 
 class AvatarTalents(BaseModel):
@@ -117,6 +120,10 @@ class AvatarTalents(BaseModel):
     """冲刺技能"""
 
     first_ascension_passive: FirstAscensionPassive
+    """第一次突破固有天赋"""
     fourth_ascension_passive: FourthAscensionPassive
+    """第四次突破固有天赋"""
     utility_passive: UtilityPassive | None = None
+    """实用固有天赋"""
     miscellaneous_passive: MiscellaneousPassive | None = None
+    """杂项固有天赋"""

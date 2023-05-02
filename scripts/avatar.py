@@ -8,13 +8,20 @@ from model.avatar import (
     AvatarInfo,
     AvatarPromote,
     AvatarStories,
+    AvatarTalents,
+    CombatTalent,
     ElementalBurst,
     ElementalSkill,
+    FirstAscensionPassive,
+    FourthAscensionPassive,
+    MiscellaneousPassive,
     NormalAttack,
+    PassiveTalent,
     Seuyu,
     Story,
     Talent,
     TalentAttribute,
+    UtilityPassive,
 )
 from model.enums import Association, AvatarQuality, Element, WeaponType
 from model.other import ItemCount
@@ -27,7 +34,7 @@ try:
 except ImportError:
     import re
 
-T = TypeVar("T", bound=Talent)
+TalentType = TypeVar("TalentType", bound=Talent)
 
 OUT_DIR = PROJECT_ROOT.joinpath("out")
 
@@ -197,7 +204,7 @@ async def parse_avatar_data(lang: Lang):
                 )
             return result
 
-        def parse_skill(skill_id: int, skill_cls: type[T]) -> T:
+        def parse_skill(skill_id: int, skill_cls: type[CombatTalent]) -> CombatTalent:
             skill_data = next(filter(lambda x: x["id"] == skill_id, skill_json_data))
             _name = manager.get_text(skill_data["nameTextMapHash"])
             _description = manager.get_text(skill_data["descTextMapHash"])
@@ -219,6 +226,50 @@ async def parse_avatar_data(lang: Lang):
                 }
             )
 
+        def parse_passive_talent(
+            talent_data: dict, talent_cls: type[PassiveTalent]
+        ) -> PassiveTalent:
+            group_id = talent_data["proudSkillGroupId"]
+            _promote_level = talent_data.get("needAvatarPromoteLevel", 0)
+            skill_data = next(
+                filter(
+                    lambda x: x["proudSkillGroupId"] == group_id, proud_skill_json_data
+                )
+            )
+            param_descriptions = list(
+                filter(
+                    lambda x: x is not None,
+                    map(
+                        lambda x: manager.get_text(x),
+                        skill_data["paramDescList"],
+                    ),
+                )
+            )
+            _description = manager.get_text(skill_data["descTextMapHash"])
+            _param_list = skill_data["paramList"][
+                : len(
+                    re.findall(
+                        r"(\d+)|(?:(\d+)%)|(?:(\d+\.\d+))",
+                        re.sub(
+                            r"(<(?P<tag_name>[a-z]+?)=(?P<value>.+?)>.+</(?P=tag_name)>)",
+                            "",
+                            _description,
+                        ),
+                    )
+                )
+            ]
+            return talent_cls(
+                name=manager.get_text(skill_data["nameTextMapHash"]),
+                description=_description,
+                icon=skill_data["icon"],
+                promote_level=_promote_level,
+                attribute=TalentAttribute(
+                    param_descriptions=param_descriptions,
+                    param_list=_param_list,
+                    break_level=skill_data.get("breakLevel", 0),
+                ),
+            )
+
         # 天赋
         skill_depot_data = next(
             filter(lambda x: x["id"] == data["skillDepotId"], skill_depot_json_data)
@@ -229,11 +280,50 @@ async def parse_avatar_data(lang: Lang):
         # 元素战技
         elemental_skill = parse_skill(skill_ids[1], ElementalSkill)
         # 冲刺技能
-        if len(skill_ids) == 3:
-            alternate_sprint = parse_skill(skill_ids[2], AlternateSprint)
+        alternate_sprint = (
+            parse_skill(skill_ids[2], AlternateSprint) if len(skill_ids) == 3 else None
+        )
         # 元素爆发
         burst_skill = parse_skill(skill_depot_data["energySkill"], ElementalBurst)
-        breakpoint()
+        # 第一次突破被动天赋
+        first_passive = parse_passive_talent(
+            skill_depot_data["inherentProudSkillOpens"][0], FirstAscensionPassive
+        )
+        # 第四次突破被动天赋
+        fourth_passive = parse_passive_talent(
+            skill_depot_data["inherentProudSkillOpens"][1], FourthAscensionPassive
+        )
+        # 实用固有天赋
+        utility_passive = parse_passive_talent(
+            skill_depot_data["inherentProudSkillOpens"][2], UtilityPassive
+        )
+        # 杂项固有天赋
+        if (
+            len(
+                list(
+                    filter(
+                        lambda x: x != 0, skill_depot_data["inherentProudSkillOpens"]
+                    )
+                )
+            )
+            == 4
+        ):
+            miscellaneous_passive = parse_passive_talent(
+                skill_depot_data["inherentProudSkillOpens"][3], MiscellaneousPassive
+            )
+        else:
+            miscellaneous_passive = None
+        # noinspection PyTypeChecker
+        avatar_talents = AvatarTalents(
+            normal_attack=normal_attack,
+            elemental_skill=elemental_skill,
+            elemental_burst=burst_skill,
+            alternate_sprint=alternate_sprint,
+            first_ascension_passive=first_passive,
+            fourth_ascension_passive=fourth_passive,
+            utility_passive=utility_passive,
+            miscellaneous_passive=miscellaneous_passive,
+        )
 
         # 角色突破数据
         promote_id = data["avatarPromoteId"]
