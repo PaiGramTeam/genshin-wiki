@@ -1,11 +1,7 @@
-from typing import TYPE_CHECKING
-
+from model.avatar._talente import AvatarTalents
 from model.enums import Association, AvatarQuality, Element, WeaponType
 from model.other import ItemCount
 from utils.model import BaseModel
-
-if TYPE_CHECKING:
-    from model.avatar._talente import AvatarTalents
 
 __all__ = (
     "Avatar",
@@ -74,17 +70,17 @@ class AvatarStories(BaseModel):
     story_5: Story
     """角色故事5"""
 
-    miscellaneous: Story
+    miscellaneous: Story | None = None
     """角色杂谈"""
 
-    vision: Story
+    vision: Story | None = None
     """神之眼"""
 
 
 class AvatarInfo(BaseModel):
-    title: str
+    title: str | None
     """称号"""
-    birth: AvatarBirth
+    birth: AvatarBirth | None
     """生日"""
     occupation: str
     """所属"""
@@ -123,6 +119,8 @@ class AvatarConstellation(BaseModel):
     """命座描述"""
     icon: str
     """命座图标"""
+    param_list: list[float]
+    """命座数据参数列表"""
 
 
 class AvatarAttribute(BaseModel):
@@ -177,7 +175,7 @@ class Avatar(BaseModel):
     """角色信息"""
     attributes: AvatarAttribute
     """角色基础属性"""
-    talents: "AvatarTalents"
+    talents: AvatarTalents
     """角色天赋信息"""
     promotes: list[AvatarPromote]
     """角色突破数据"""

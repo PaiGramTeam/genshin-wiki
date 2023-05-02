@@ -112,16 +112,16 @@ class AvatarTalents(BaseModel):
 
     normal_attack: NormalAttack
     """普通攻击"""
-    elemental_skill: ElementalSkill
+    elemental_skill: ElementalSkill | None
     """元素战技"""
-    elemental_burst: ElementalBurst
+    elemental_burst: ElementalBurst | None
     """元素爆发"""
     alternate_sprint: AlternateSprint | None = None
     """冲刺技能"""
 
-    first_ascension_passive: FirstAscensionPassive
+    first_ascension_passive: FirstAscensionPassive | None
     """第一次突破固有天赋"""
-    fourth_ascension_passive: FourthAscensionPassive
+    fourth_ascension_passive: FourthAscensionPassive | None
     """第四次突破固有天赋"""
     utility_passive: UtilityPassive | None = None
     """实用固有天赋"""
