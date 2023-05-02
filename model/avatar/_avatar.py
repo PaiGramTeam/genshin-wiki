@@ -1,10 +1,11 @@
 from typing import TYPE_CHECKING
 
-from model.enums import AvatarQuality, Element, WeaponType
+from model.enums import Association, AvatarQuality, Element, WeaponType
 from utils.model import BaseModel
 
 if TYPE_CHECKING:
     from model.item import Item
+    from model.avatar._talente import AvatarTalents
 
 __all__ = (
     "Avatar",
@@ -12,6 +13,8 @@ __all__ = (
     "AvatarInfo",
     "AvatarConstellation",
     "AvatarPromote",
+    "AvatarStories",
+    "Story",
     "Seuyu",
     "ItemCount",
 )
@@ -39,6 +42,45 @@ class Seuyu(BaseModel):
     """韩语CV"""
 
 
+class Story(BaseModel):
+    """故事"""
+
+    title: str
+    """标题"""
+    content: str
+    """内容"""
+    tips: list[str]
+    """提示"""
+
+
+class AvatarStories(BaseModel):
+    """角色故事"""
+
+    details: Story
+    """角色详情"""
+
+    story_1: Story
+    """角色故事1"""
+
+    story_2: Story
+    """角色故事2"""
+
+    story_3: Story
+    """角色故事3"""
+
+    story_4: Story
+    """角色故事4"""
+
+    story_5: Story
+    """角色故事5"""
+
+    miscellaneous: Story
+    """角色杂谈"""
+
+    vision: Story
+    """神之眼"""
+
+
 class AvatarInfo(BaseModel):
     title: str
     """称号"""
@@ -52,8 +94,12 @@ class AvatarInfo(BaseModel):
     """星座"""
     description: str
     """描述"""
+    association: Association
+    """区域"""
     seuyu: Seuyu
     """声优"""
+    stories: AvatarStories
+    """故事"""
 
 
 class ItemCount(BaseModel):
@@ -105,5 +151,7 @@ class Avatar(BaseModel):
     """角色信息"""
     promote: AvatarPromote
     """角色突破数据"""
+    talents: "AvatarTalents"
+    """角色天赋信息"""
     constellations: list[AvatarConstellation]
     """角色命座信息"""

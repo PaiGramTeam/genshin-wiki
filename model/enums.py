@@ -102,6 +102,7 @@ class FoodQuality(StrEnum):
     """美味的"""
 
 
+# noinspection SpellCheckingInspection
 class MaterialType(StrEnum):
     Adsorbate = "ADSORBATE"
     FakeAbsorbate = "FAKE_ABSORBATE"
@@ -142,3 +143,20 @@ class MaterialType(StrEnum):
     Costume = "COSTUME"
     FurnitureSuiteFormula = "FURNITURE_SUITE_FORMULA"
     FurnitureFormula = "FURNITURE_FORMULA"
+
+
+class Association(StrEnum):
+    Inazuma = "INAZUMA"
+    """稻妻"""
+    Mondstadt = "MONDSTADT"
+    """蒙德"""
+    Mainactor = "MAINACTOR"
+    """主角"""
+    Liyue = "LIYUE"
+    """璃月"""
+    Fatui = "FATUI"
+    """愚人众"""
+    Ranger = "RANGER"
+    """游侠"""
+    Sumeru = "SUMERU"
+    """须弥"""
