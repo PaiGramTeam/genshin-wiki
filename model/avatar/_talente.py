@@ -1,5 +1,7 @@
-from utils.model import BaseModel
 from typing import ClassVar
+
+from model.other import ItemCount
+from utils.model import BaseModel
 
 __all__ = (
     "Talent",
@@ -15,7 +17,24 @@ __all__ = (
     "UtilityPassive",
     "MiscellaneousPassive",
     "AvatarTalents",
+    "TalentAttribute",
 )
+
+
+class TalentAttribute(BaseModel):
+    level: int
+    """等级"""
+    param_descriptions: list[str]
+    """参数描述"""
+    param_list: list[float]
+    """参数列表"""
+
+    break_level: int = 0
+    """所需突破等级"""
+    coin: int = 0
+    """摩拉"""
+    cost_items: list[ItemCount] = []
+    """消耗物品"""
 
 
 class Talent(BaseModel):
@@ -28,7 +47,7 @@ class Talent(BaseModel):
     level: int = 0
     """解锁等级"""
 
-    params: list[float] = []
+    attributes: list[TalentAttribute]
     """数值参数列表"""
 
 

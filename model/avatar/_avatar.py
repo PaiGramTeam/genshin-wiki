@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
 from model.enums import Association, AvatarQuality, Element, WeaponType
+from model.other import ItemCount
 from utils.model import BaseModel
 
 if TYPE_CHECKING:
-    from model.item import Item
     from model.avatar._talente import AvatarTalents
 
 __all__ = (
@@ -16,7 +16,7 @@ __all__ = (
     "AvatarStories",
     "Story",
     "Seuyu",
-    "ItemCount",
+    "AvatarAttribute",
 )
 
 
@@ -102,16 +102,7 @@ class AvatarInfo(BaseModel):
     """故事"""
 
 
-class ItemCount(BaseModel):
-    item: "Item"
-    """物品"""
-    count: int
-    """数量"""
-
-
 class AvatarPromote(BaseModel):
-    required_level: int = 0
-    """突破所需等级"""
     promote_level: int = 0
     """突破等级"""
     max_level: int
@@ -119,7 +110,7 @@ class AvatarPromote(BaseModel):
 
     coin: int = 0
     """摩拉"""
-    items: list[ItemCount] = []
+    cost_items: list[ItemCount] = []
     """突破所需材料"""
 
 
@@ -132,6 +123,41 @@ class AvatarConstellation(BaseModel):
     """命座描述"""
     icon: str
     """命座图标"""
+
+
+class AvatarAttribute(BaseModel):
+    """角色属性"""
+
+    HP: float
+    """生命值"""
+    Attack: float
+    """攻击力"""
+    Defense: float
+    """防御力"""
+    Critical: float
+    """暴击率"""
+    CriticalDamage: float
+    """暴击伤害"""
+    ChargeEfficiency: float
+    """元素充能效率"""
+    ElementalMastery: float = 0
+    """元素精通"""
+    PhysicalAddHurt: float = 0
+    """物理伤害加成"""
+    PyroAddHurt: float = 0
+    """火元素伤害加成"""
+    HydroAddHurt: float = 0
+    """水元素伤害加成"""
+    AnemoAddHurt: float = 0
+    """风元素伤害加成"""
+    ElectroAddHurt: float = 0
+    """雷元素伤害加成"""
+    DendroAddHurt: float = 0
+    """草元素伤害加成"""
+    CryoAddHurt: float = 0
+    """冰元素伤害加成"""
+    GeoAddHurt: float = 0
+    """岩元素伤害加成"""
 
 
 class Avatar(BaseModel):
@@ -149,9 +175,11 @@ class Avatar(BaseModel):
     """武器类型"""
     information: AvatarInfo
     """角色信息"""
-    promote: AvatarPromote
-    """角色突破数据"""
+    attributes: AvatarAttribute
+    """角色基础属性"""
     talents: "AvatarTalents"
     """角色天赋信息"""
+    promotes: list[AvatarPromote]
+    """角色突破数据"""
     constellations: list[AvatarConstellation]
     """角色命座信息"""
