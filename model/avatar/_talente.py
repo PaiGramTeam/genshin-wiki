@@ -21,22 +21,6 @@ __all__ = (
 )
 
 
-class TalentAttribute(BaseModel):
-    level: int = 1
-    """等级"""
-    param_descriptions: list[str] = []
-    """参数描述"""
-    param_list: list[float] = []
-    """参数列表"""
-
-    break_level: int = 0
-    """所需突破等级"""
-    coin: int = 0
-    """摩拉"""
-    cost_items: list[ItemCount] = []
-    """消耗物品"""
-
-
 class Talent(BaseModel):
     name: str
     """天赋名称"""
@@ -48,14 +32,29 @@ class Talent(BaseModel):
     """解锁等级"""
 
 
+class TalentAttribute(BaseModel):
+    level: int = 1
+    """等级"""
+    params: list[float] = []
+    """参数数值"""
+
+    break_level: int = 0
+    """所需突破等级"""
+    coin: int = 0
+    """摩拉"""
+    cost_items: list[ItemCount] = []
+    """消耗物品"""
+
+
 class CombatTalent(Talent):
     """战斗天赋"""
 
     cooldown: float = 0
     """冷却时间"""
-
+    param_descriptions: list[str] = []
+    """参数描述"""
     attributes: list[TalentAttribute]
-    """数值参数列表"""
+    """数值参数"""
 
 
 class NormalAttack(CombatTalent):

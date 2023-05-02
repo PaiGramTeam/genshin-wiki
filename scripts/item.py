@@ -77,7 +77,7 @@ async def parse_item_data(
     async with async_open(out_path / "item.json", encoding="utf-8", mode="w") as file:
         await file.write(
             json.dumps(
-                [i.dict() for i in item_list],
+                [i.dict(exclude_none=True) for i in item_list],
                 ensure_ascii=False,
                 encode_html_chars=False,
                 indent=4,

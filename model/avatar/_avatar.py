@@ -1,5 +1,5 @@
 from model.avatar._talente import AvatarTalents
-from model.enums import Association, AvatarQuality, Element, WeaponType
+from model.enums import Association, AvatarQuality, Element, PropType, WeaponType
 from model.other import ItemCount
 from utils.model import BaseModel
 
@@ -13,6 +13,7 @@ __all__ = (
     "Story",
     "Seuyu",
     "AvatarAttribute",
+    "AddProp",
 )
 
 
@@ -98,11 +99,22 @@ class AvatarInfo(BaseModel):
     """故事"""
 
 
+class AddProp(BaseModel):
+    """属性加成"""
+
+    type: PropType
+    """属性类型"""
+    value: float
+    """属性值"""
+
+
 class AvatarPromote(BaseModel):
     promote_level: int = 0
     """突破等级"""
     max_level: int
     """解锁的等级上限"""
+    add_props: list[AddProp] = []
+    """属性加成"""
 
     coin: int = 0
     """摩拉"""
@@ -134,28 +146,10 @@ class AvatarAttribute(BaseModel):
     """防御力"""
     Critical: float
     """暴击率"""
-    CriticalDamage: float
+    CriticalHurt: float
     """暴击伤害"""
     ChargeEfficiency: float
     """元素充能效率"""
-    ElementalMastery: float = 0
-    """元素精通"""
-    PhysicalAddHurt: float = 0
-    """物理伤害加成"""
-    PyroAddHurt: float = 0
-    """火元素伤害加成"""
-    HydroAddHurt: float = 0
-    """水元素伤害加成"""
-    AnemoAddHurt: float = 0
-    """风元素伤害加成"""
-    ElectroAddHurt: float = 0
-    """雷元素伤害加成"""
-    DendroAddHurt: float = 0
-    """草元素伤害加成"""
-    CryoAddHurt: float = 0
-    """冰元素伤害加成"""
-    GeoAddHurt: float = 0
-    """岩元素伤害加成"""
 
 
 class Avatar(BaseModel):
