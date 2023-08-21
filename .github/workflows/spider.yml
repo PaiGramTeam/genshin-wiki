@@ -1,7 +1,5 @@
 name: Genshin Data Spider
 on:
-  schedule:
-    - cron: '0 4 */4 * *'
   workflow_dispatch:
 jobs:
   spider:
