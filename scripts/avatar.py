@@ -5,6 +5,7 @@ from typing import TypeVar
 import ujson as json
 from aiofiles import open as async_open
 from humps import pascalize
+from logging import getLogger
 
 from model.avatar import (
     AddProp,
@@ -43,9 +44,12 @@ try:
 except ImportError:
     import re
 
+logger = getLogger("scripts.avatar")
+
 TalentType = TypeVar("TalentType", bound=Talent)
 
 OUT_DIR = PROJECT_ROOT.joinpath("out")
+OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 prop_type_map = {
     "Hp": PropType.HP,
@@ -454,6 +458,7 @@ async def parse_avatar_data(lang: Lang):
             constellations=constellations,
         )
         avatar_list.append(avatar)
+        logger.info(f"成功爬取了 {name} 的数据")
 
     async with async_open(out_path / "avatar.json", encoding="utf-8", mode="w") as file:
         await file.write(
