@@ -51,10 +51,19 @@ async def parse_item_data(
                 item = Namecard(pictures=pictures, **kwargs)
 
             elif "materialType" in data:
-                material_type = MaterialType(
-                    data["materialType"].removeprefix("MATERIAL_")
+                # material_type = MaterialType(
+                #     data["materialType"].removeprefix("MATERIAL_")
+                # )
+                # item = Material(material_type=material_type, **kwargs)
+                material_type = data["materialType"].removeprefix("MATERIAL_")
+                item = Material(
+                    material_type=material_type,
+                    material_type_description=manager.get_text(
+                        data["typeDescTextMapHash"]
+                    )
+                    or "",
+                    **kwargs,
                 )
-                item = Material(material_type=material_type, **kwargs)
             elif "foodQuality" in data:
                 quality = FoodQuality(data["foodQuality"])
                 effect = manager.get_text(data["effectDescTextMapHash"])
