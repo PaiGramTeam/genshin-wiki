@@ -25,7 +25,7 @@ async def parse_item_data(
     item_list = []
     for data in filter(lambda x: "rankLevel" in x, json_data):
         id = data["id"]
-        if name := manager.get_text(data["nameTextMapHash"]) is None:
+        if (name := manager.get_text(data["nameTextMapHash"])) is None:
             continue
         type = manager.get_text(data["typeDescTextMapHash"])
         icon = data["icon"]
