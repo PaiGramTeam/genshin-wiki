@@ -1,0 +1,31 @@
+name: Genshin Data Spider
+on:
+  schedule:
+    - cron: '0 4 */4 * *'
+  workflow_dispatch:
+jobs:
+  spider:
+    runs-on: ubuntu-latest
+    name: "Scrape Genshin Data"
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4.7.0
+        with:
+          python-version: '3.11'
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade poetry
+          poetry install
+
+      - name: Run Spider
+        run: python -m run.py
+
+      - name: Commit and push
+        run: |-
+          git config --global user.email "bot@github.com" && git config --global user.name "Waka-Bot"
+          git diff
+          git add ./out && git commit -m ":memo: update profile" || exit 0
+          git pull && git push
