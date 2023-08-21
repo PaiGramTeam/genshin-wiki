@@ -1,3 +1,4 @@
+from functools import lru_cache
 from itertools import chain
 from typing import TypeVar
 
@@ -46,79 +47,6 @@ TalentType = TypeVar("TalentType", bound=Talent)
 
 OUT_DIR = PROJECT_ROOT.joinpath("out")
 
-elements_map = {
-    (
-        230082676,
-        313529204,
-        627825788,
-        1247335084,
-        1646245548,
-        1740638908,
-        3105283268,
-        3112476852,
-        3177381772,
-        3847511308,
-    ): Element.Pyro,
-    (
-        321258364,
-        483165900,
-        756679372,
-        1688473500,
-        2480954540,
-        3228108484,
-        3400532572,
-        3646588372,
-        4022324356,
-    ): Element.Hydro,
-    (
-        126875444,
-        467004516,
-        550531300,
-        898621369,
-        1778251796,
-        2075460644,
-        2477900860,
-        2648184060,
-    ): Element.Anemo,
-    (
-        122554396,
-        608089036,
-        689445588,
-        1072755468,
-        1821644548,
-        1843086100,
-        2085306033,
-        2143937940,
-        2480172868,
-        2689029804,
-        3352621156,
-        4219874220,
-    ): Element.Electro,
-    (2161032364, 4017448612): Element.Dendro,
-    (
-        98482612,
-        766902996,
-        862088588,
-        1480674860,
-        1695600284,
-        2778487532,
-        2809830820,
-        3057990932,
-        4127670180,
-        4220569804,
-    ): Element.Cryo,
-    (
-        825986772,
-        967031460,
-        1016213980,
-        1662907292,
-        2507042785,
-        3219124204,
-        3617274620,
-        3929787020,
-    ): Element.Geo,
-    (471154292, 821712868, 1128382182, 3053155130, 4168416172): Element.Null,
-}
 prop_type_map = {
     "Hp": PropType.HP,
     "RockAddHurt": PropType.Geo,
@@ -240,6 +168,42 @@ def parse_passive_talent(
     )
 
 
+@lru_cache
+def get_element_data() -> dict[Element, set[int]]:
+    _manager = ResourceManager("chs")
+    _avatar_json_data = _manager.fetch("AvatarExcelConfigData")
+    _fetter_info_json_data = manager.fetch("FetterInfoExcelConfigData")
+    text_map = {
+        "火": Element.Pyro,
+        "水": Element.Hydro,
+        "风": Element.Anemo,
+        "雷": Element.Electro,
+        "草": Element.Dendro,
+        "冰": Element.Cryo,
+        "岩": Element.Geo,
+        "无": Element.Null,
+    }
+    result = {k: set() for k in text_map.values()}
+    for data in _avatar_json_data:
+        _id = data["id"]
+        if (
+            info_data := next(
+                chain(
+                    filter(lambda x: x["avatarId"] == _id, _fetter_info_json_data),
+                    [None],
+                )
+            )
+        ) is None:
+            continue
+        if (
+            vision := _manager.get_text(
+                text_id := info_data["avatarVisionBeforTextMapHash"]
+            )
+        ) is not None:
+            result[text_map[vision]] = set(list(result[text_map[vision]]) + [text_id])
+    return result
+
+
 # noinspection PyShadowingBuiltins,SpellCheckingInspection,PyGlobalUndefined
 async def parse_avatar_data(lang: Lang):
     global out_path, manager
@@ -259,6 +223,8 @@ async def parse_avatar_data(lang: Lang):
     proud_skill_json_data = manager.fetch("ProudSkillExcelConfigData")
     talent_json_data = manager.fetch("AvatarTalentExcelConfigData")
 
+    element_data = get_element_data()
+
     avatar_list = []
     for data in avatar_json_data:
         id = data["id"]
@@ -273,10 +239,10 @@ async def parse_avatar_data(lang: Lang):
         name = manager.get_text(data["nameTextMapHash"])
         element = next(
             filter(
-                lambda x: info_data["avatarVisionBeforTextMapHash"] in x[0],
-                elements_map.items(),
+                lambda x: info_data["avatarVisionBeforTextMapHash"] in x[1],
+                element_data.items(),
             )
-        )[1]
+        )[0]
         quality = AvatarQuality(
             data["qualityType"].removeprefix("QUALITY_").replace("ORANGE_SP", "SPECIAL")
         )

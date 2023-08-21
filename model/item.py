@@ -1,4 +1,4 @@
-from model.enums import FoodQuality, ItemType, MaterialType
+from model.enums import FoodQuality, ItemType
 from utils.model import BaseModel
 
 
@@ -22,8 +22,10 @@ class Item(BaseModel):
 
 
 class Material(Item):
-    material_type: MaterialType
+    material_type: str
     """材料类型"""
+    material_type_description: str
+    """材料类型描述"""
 
 
 class Food(Item):
