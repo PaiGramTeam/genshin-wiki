@@ -50,11 +50,25 @@ async def parse_item_data(
                 pictures = data["picPath"]
                 item = Namecard(pictures=pictures, **kwargs)
 
+            elif "foodQuality" in data:
+                quality = FoodQuality(
+                    data["foodQuality"].removeprefix("FOOD_QUALITY_").title()
+                )
+                effect = manager.get_text(data["effectDescTextMapHash"]) or ""
+                effect_icon = data["effectIcon"]
+                # effect_name = data["effectName"]
+                item = Food(
+                    quality=quality,
+                    effect=effect,
+                    effect_icon=effect_icon,
+                    # effect_name=effect_name,
+                    **kwargs,
+                )
             elif "materialType" in data:
                 # material_type = MaterialType(
                 #     data["materialType"].removeprefix("MATERIAL_")
                 # )
-                # item = Material(material_type=material_type, **kwargs)
+                # item = MaterialItem(material_type=material_type, **kwargs)
                 material_type = data["materialType"].removeprefix("MATERIAL_")
                 item = Material(
                     material_type=material_type,
@@ -62,18 +76,6 @@ async def parse_item_data(
                         data["typeDescTextMapHash"]
                     )
                     or "",
-                    **kwargs,
-                )
-            elif "foodQuality" in data:
-                quality = FoodQuality(data["foodQuality"])
-                effect = manager.get_text(data["effectDescTextMapHash"])
-                effect_icon = data["effectIcon"]
-                effect_name = data["effectName"]
-                item = Food(
-                    quality=quality,
-                    effect=effect,
-                    effect_icon=effect_icon,
-                    effect_name=effect_name,
                     **kwargs,
                 )
             else:
