@@ -1,5 +1,6 @@
 from model.avatar._talente import AvatarTalents
 from model.enums import Association, AvatarQuality, Element, PropType, WeaponType
+from model.item import Food
 from model.other import ItemCount
 from utils.model import BaseModel
 
@@ -87,6 +88,8 @@ class AvatarInfo(BaseModel):
     """所属"""
     vision: str
     """神之眼"""
+    special_food: Food
+    """特殊料理"""
     constellation: str
     """星座"""
     description: str
@@ -152,6 +155,15 @@ class AvatarAttribute(BaseModel):
     """元素充能效率"""
 
 
+class AvatarIcon(BaseModel):
+    """角色图标"""
+
+    name: str
+    """证件照"""
+    side_name: str
+    """侧面照"""
+
+
 class Avatar(BaseModel):
     """角色"""
 
@@ -159,6 +171,8 @@ class Avatar(BaseModel):
     """角色ID"""
     name: str
     """名称"""
+    icon: AvatarIcon
+    """图标"""
     element: Element
     """元素"""
     quality: AvatarQuality

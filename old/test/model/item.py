@@ -35,8 +35,8 @@ class Food(Item):
     """效果"""
     effect_icon: str
     """效果图标"""
-    effect_name: str
-    """效果名称"""
+    # effect_name: str
+    # """效果名称"""
 
 
 class Namecard(Item):
