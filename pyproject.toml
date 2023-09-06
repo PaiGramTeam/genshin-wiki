@@ -1,25 +1,35 @@
-[tool.poetry]
-name = "genshinwikidataparser"
+[project]
+name = "genshin-wiki-py"
 version = "0.1.0"
-description = "原神 wiki 数据解析库"
-authors = ["Karako <karakohear@gmail.com>"]
-license = "MIT"
+description = "Pydantic Genshin Impact Wiki API Wrapper"
+authors = [
+    { name = "Karako", email = "karakohear@gmail.com" },
+]
+dependencies = [
+    "ujson<6.0.0,>=5.7.0",
+    "orjson<4.0.0,>=3.8.8",
+    "aiohttp[speedups]<4.0.0,>=3.8.4",
+    "aiofiles<24.0.0,>=23.1.0",
+    "regex<2023.0.0,>=2022.10.31",
+    "arko-wrapper<1.0.0,>=0.2.8",
+    "peewee>=3.16.3",
+    "pydantic>=2.3.0",
+    "pydantic-settings>=2.0.3",
+    "Cython>=3.0.1",
+    "apsw>=3.43.0.0",
+    "gevent>=23.7.0",
+]
+requires-python = ">=3.11,<4.0"
 readme = "README.md"
+license = { text = "MIT" }
 
-[tool.poetry.dependencies]
-python = "^3.11"
-ujson = "^5.7.0"
-orjson = "^3.8.8"
-aiohttp = {extras = ["speedups"], version = "^3.8.4"}
-pydantic = {extras = ["dotenv", "email"], version = "^1.10.6"}
-aiofiles = "^23.1.0"
-regex = "^2022.10.31"
-pyhumps = "^3.8.0"
-httpx = {extras = ["http2"], version = "^0.23.3"}
-arko-wrapper = "^0.2.8"
+[project.optional-dependencies]
+sqlite = []
 
-
+[tool.pdm.build]
+includes = ["genshin_wiki_py", "pyproject.toml", "README.md", "LICENSE"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+

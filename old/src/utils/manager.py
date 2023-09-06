@@ -2,6 +2,7 @@ import os
 import ssl
 from functools import lru_cache
 
+import httpx
 import ujson as json
 from httpx import Client
 from pydantic import Json
@@ -22,12 +23,6 @@ class ResourceManager:
     _client: Client | None = None
     _lang_data: dict[str, str] | None = None
 
-    def __init__(self, base_url: str | None = None, lang: Lang | None = None):
-        self._base_url = URL(
-            base_url or "https://gitlab.com/Dimbreath/AnimeGameData/-/raw/master/"
-        )
-        self._lang = lang or "chs"
-
     @property
     def lang(self) -> Lang:
         return self._lang
@@ -39,6 +34,15 @@ class ResourceManager:
         if self._client is None or self._client.is_closed:
             self._client = Client(verify=ssl_context, timeout=Timeout(timeout=30))
         return self._client
+
+    def __init__(self, lang: Lang | None = None, *, base_url: str | None = None):
+        self._base_url = URL(
+            base_url or "https://gitlab.com/Dimbreath/AnimeGameData/-/raw/master/"
+        )
+        self._lang = lang or os.environ.get("LANG", None) or "chs"
+
+    def __call__(self, text_id: int | str | None) -> str | None:
+        return self.get_text(text_id)
 
     def refresh(self) -> None:
         """删除缓存数据的文件夹，需要数据时会重新从网络上下载，达到刷新缓存数据的目的"""
@@ -67,9 +71,13 @@ class ResourceManager:
         file_path.parent.mkdir(exist_ok=True, parents=True)
 
         if not (file_path.exists() and os.stat(file_path)):
-            response = self.client.get(
-                str(self._base_url / file_dir / file_path.name)
-            )
+            while True:
+                try:
+                    response = self.client.get(str(self._base_url / file_dir / file_path.name))
+                    break
+                except httpx.ReadTimeout:
+                    continue
+            # noinspection PyUnboundLocalVariable
             response.raise_for_status()
             with open(file_path, encoding="utf-8", mode="w") as file:
                 file.write(content := response.text)

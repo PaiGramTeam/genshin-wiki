@@ -32,6 +32,7 @@ from model.avatar import (
     TalentAttribute,
     UtilityPassive,
 )
+from model.avatar._avatar import AvatarIcon
 from model.enums import Association, AvatarQuality, Element, PropType, WeaponType
 from model.other import ItemCount
 from utils.const import PROJECT_ROOT
@@ -241,6 +242,7 @@ async def parse_avatar_data(lang: Lang):
         ) is None:
             continue
         name = manager.get_text(data["nameTextMapHash"])
+        icon = AvatarIcon(name=data["iconName"], side_name=data["sideIconName"])
         element = next(
             filter(
                 lambda x: info_data["avatarVisionBeforTextMapHash"] in x[1],
@@ -448,6 +450,7 @@ async def parse_avatar_data(lang: Lang):
         avatar = Avatar(
             id=id,
             name=name,
+            icon=icon,
             element=element,
             quality=quality,
             weapon_type=weapon_type,
